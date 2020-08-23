@@ -36,7 +36,7 @@ module StreakPng
       self
     end
 
-    def generate
+    def generate &block
       maxdate = Date.today
 
       mindate = maxdate.prev_year
@@ -48,7 +48,7 @@ module StreakPng
 
       mindate.upto(maxdate) { |date|
         draw_square x, y, @levelcolors.reduce({ minCommits: -1, color: '#000' }) { |acc, lvl|
-          if @streakdata.fetch_count(date) >= lvl[:minCommits] && lvl[:minCommits] >= acc[:minCommits]
+          if @streakdata.fetch_count(date, &block) >= lvl[:minCommits] && lvl[:minCommits] >= acc[:minCommits]
             lvl
           else
             acc
@@ -93,8 +93,12 @@ module StreakPng
       @bydate[date.to_s] = @bydate[date.to_s] << tags
     end
 
-    def fetch_count date
-      @bydate[date.to_s].length
+    def fetch_count date, &block
+      if !block_given?
+        @bydate[date.to_s].length
+      else
+        @bydate[date.to_s].count &block
+      end
     end
   end
 end
