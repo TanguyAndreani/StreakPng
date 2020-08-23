@@ -1,8 +1,7 @@
 require 'chunky_png'
 require 'date'
-require 'csv'
 
-module Streak
+module StreakPng
   DEFAULT_LEVEL_COLORS = [
     # credit @byliuyang <https://github.com/byliuyang/github-stats>
     { minCommits: 0, color: '#ebedf0' },
@@ -19,6 +18,10 @@ module Streak
         @streakdata = StreakData.new
         @streakdata.add Date.today, "Today's task!"
       else
+        if streakdata.class != StreakData
+          STDERR.puts "streakdata should be an instance of StreakData or nil!"
+          return
+        end
         @streakdata = streakdata
       end
       @margin = margin
@@ -80,6 +83,9 @@ module Streak
     end
 
     def add date, *tags
+      if date.nil?
+        date = Date.today
+      end
       if date.class != Date
         STDERR.puts "The date should be an instance of the Date class!"
         return
