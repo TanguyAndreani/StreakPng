@@ -32,7 +32,10 @@ You can override today's date by passing a `maxdate: customdate` argument.
 You can change the default interval, which is of a year, using three arguments. For example, here is how you generate a three month streak chart:
 
 ```ruby
+StreakChart
+.new(...)
 .generate(y: 0, m: 3)
+.save(...)
 ```
 
 ![](three_months.png)
