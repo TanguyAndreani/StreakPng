@@ -3,8 +3,9 @@
 ![](filename.png)
 
 ```shell
+bundle install
 ${EDITOR} sample_streak.csv
-ruby generate_streak.rb sample_streak.csv chart.png
+bundle exec ruby generate_streak.rb sample_streak.csv chart.png
 open chart.png
 ```
 
