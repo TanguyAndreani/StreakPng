@@ -1,6 +1,12 @@
+#!/usr/bin/env ruby
+
+if ARGV.length != 2
+  exit 1
+end
+
 require 'csv'
 
-require './lib/StreakPng'
+require 'StreakPng'
 include StreakPng
 
 data = StreakData.new

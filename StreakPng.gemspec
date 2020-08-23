@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Tanguy Andreani"]
   s.email       = 'tanguy.andreani@tuta.io'
   s.files       = ["lib/StreakPng.rb", "lib/StreakPng/StreakPng.rb"]
+  s.executables = ['streak_from_csv']
   s.homepage    = 'https://github.com/TanguyAndreani/StreakPng'
   s.license       = 'MIT'
   s.add_dependency "chunky_png", "~> 1.3"
