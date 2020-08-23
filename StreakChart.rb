@@ -4,11 +4,12 @@ require 'csv'
 
 module Streak
   DEFAULT_LEVEL_COLORS = [
-      { minCommits: 0, color: '#ebedf0' },
-      { minCommits: 1, color: '#c6e48b' },
-      { minCommits: 9, color: '#7bc96f' },
-      { minCommits: 17, color: '#239a3b' },
-      { minCommits: 26, color: '#196127' }
+    # credit @byliuyang <https://github.com/byliuyang/github-stats>
+    { minCommits: 0, color: '#ebedf0' },
+    { minCommits: 1, color: '#c6e48b' },
+    { minCommits: 9, color: '#7bc96f' },
+    { minCommits: 17, color: '#239a3b' },
+    { minCommits: 26, color: '#196127' }
   ]
 
   class StreakChart
