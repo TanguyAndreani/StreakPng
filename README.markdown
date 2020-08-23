@@ -2,6 +2,14 @@
 
 ![](filename.png)
 
+## As a RubyGem
+
+```ruby
+gem "StreakPng", :git => "https://github.com/TanguyAndreani/StreakPng.git"
+```
+
+## Run the example
+
 ```shell
 bundle install
 ${EDITOR} sample_streak.csv
