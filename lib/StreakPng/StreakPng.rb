@@ -27,7 +27,7 @@ module StreakPng
       @margin = margin
       @width = width
       @height = height
-      @png = ChunkyPNG::Image.new((@width + @margin) * 53 + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
+      @png = ChunkyPNG::Image.new((@width + @margin) * 52 + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
       self
     end
 
@@ -41,7 +41,7 @@ module StreakPng
 
       mindate = maxdate.prev_year
       while mindate.cwday != 1
-        mindate = mindate.prev_day
+        mindate = mindate.next_day
       end
 
       x, y = @margin, @margin
