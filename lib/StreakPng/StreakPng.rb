@@ -38,7 +38,7 @@ module StreakPng
       self
     end
 
-    def generate y: 1, m: 0, d: 0, maxdate: nil, &block
+    def generate y: 0, m: 6, d: 0, maxdate: nil, &block
       maxdate ||= Date.today
 
       mindate = maxdate.prev_year(y).prev_month(m).prev_day(d)
@@ -81,7 +81,7 @@ module StreakPng
       chunky_color = ChunkyPNG::Color.from_hex color
       start_x.upto(start_x+@width) { |x|
         start_y.upto(start_y+@height) { |y|
-          if x - start_x <= @border || x - start_x >= @width - @border || y - start_y <= @border || y - start_y >= @height - @border
+          if x - start_x < @border || x - start_x > @width - @border || y - start_y < @border || y - start_y > @height - @border
             @png[x,y] = chunky_color
           else
             @png[x,y] = ChunkyPNG::Color.fade(chunky_color, 200)
