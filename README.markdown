@@ -11,10 +11,18 @@ gem "StreakPng", :git => "https://github.com/TanguyAndreani/StreakPng.git"
 ## Run the example
 
 ```shell
-bundle install
-${EDITOR} sample_streak.csv
-bundle exec ruby generate_streak.rb sample_streak.csv chart.png
-open chart.png
+gem install specific_install
+gem specific_install https://github.com/TanguyAndreani/StreakPng.git
+
+cat > my_streak.csv <<EOF
+sport,20 pushups,2020.08.12
+sport,20 min running,2020.08.12
+code,my super project,go,2020.08.01
+EOF
+
+streak_from_csv my_streak.csv my_streak.png
+
+open my_streak.png
 ```
 
 Or go read [generate_streak.rb](/generate_streak.rb) to see how you can generate charts with your own data.
