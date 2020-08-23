@@ -1,4 +1,4 @@
-# streak
+# StreakPng
 
 ![](filename.png)
 
