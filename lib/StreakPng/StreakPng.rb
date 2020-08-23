@@ -12,7 +12,7 @@ module StreakPng
   ]
 
   class StreakChart
-    def initialize margin, width, height, levelcolors: DEFAULT_LEVEL_COLORS, streakdata: nil
+    def initialize margin, width, height, border, levelcolors: DEFAULT_LEVEL_COLORS, streakdata: nil
       @levelcolors = levelcolors
       if streakdata.nil?
         @streakdata = StreakData.new
@@ -27,6 +27,7 @@ module StreakPng
       @margin = margin
       @width = width
       @height = height
+      @border = border
       @png = ChunkyPNG::Image.new((@width + @margin) * 52 + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
       self
     end
@@ -68,10 +69,15 @@ module StreakPng
 
     private
 
-    def draw_square(x, y, color)
-      x.upto(x+@width) { |x|
-        y.upto(y+@height) { |y|
-          @png[x,y] = ChunkyPNG::Color.from_hex color
+    def draw_square(start_x, start_y, color)
+      chunky_color = ChunkyPNG::Color.from_hex color
+      start_x.upto(start_x+@width) { |x|
+        start_y.upto(start_y+@height) { |y|
+          if x - start_x <= @border || x - start_x >= @width - @border || y - start_y <= @border || y - start_y >= @height - @border
+            @png[x,y] = chunky_color
+          else
+            @png[x,y] = ChunkyPNG::Color.fade(chunky_color, 200)
+          end
         }
       }
     end

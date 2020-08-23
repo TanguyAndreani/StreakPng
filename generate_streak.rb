@@ -10,6 +10,6 @@ CSV.foreach(ARGV[0]) do |row|
 end
 
 StreakChart
-.new(4, 10, 10, streakdata: data)
+.new(4, 14, 14, 1, streakdata: data)
 .generate
 .save(ARGV[1])
