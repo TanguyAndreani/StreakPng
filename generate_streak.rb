@@ -1,4 +1,3 @@
-require 'chunky_png'
 require 'csv'
 
 require './lib/StreakPng'
