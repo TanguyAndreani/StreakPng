@@ -1,6 +1,6 @@
 # StreakPng
 
-![](filename.png)
+![](default_chart.png)
 
 ## As a RubyGem
 
