@@ -28,7 +28,8 @@ module StreakPng
       @width = width
       @height = height
       @border = border
-      @png = ChunkyPNG::Image.new((@width + @margin) * 52 + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
+      @png = nil
+      @y, @m, @d = -1, 0, 0
       self
     end
 
@@ -37,12 +38,19 @@ module StreakPng
       self
     end
 
-    def generate &block
-      maxdate = Date.today
+    def generate y: 1, m: 0, d: 0, maxdate: nil, &block
+      maxdate ||= Date.today
 
-      mindate = maxdate.prev_year
+      mindate = maxdate.prev_year(y).prev_month(m).prev_day(d)
       while mindate.cwday != 1
         mindate = mindate.next_day
+      end
+
+      # we change the PNG's size only if we changed the interval
+      if y != @y || m != @m || d != @d
+        @y, @m, @d = 1, 0, 0
+        weeks = ((maxdate - mindate).to_f / 7.0).ceil
+        @png = ChunkyPNG::Image.new((@width + @margin) * weeks + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
       end
 
       x, y = @margin, @margin

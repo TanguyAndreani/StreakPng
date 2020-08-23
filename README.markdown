@@ -24,3 +24,15 @@ StreakChart
 .generate { |tags| tags[0] == 'cryptopals' }
 .save(...)
 ```
+
+### Interval
+
+You can override today's date by passing a `maxdate: customdate` argument.
+
+You can change the default interval, which is of a year, using three arguments. For example, here is how you generate a three month streak chart:
+
+```ruby
+.generate(y: 0, m: 3)
+```
+
+![](three_months.png)
