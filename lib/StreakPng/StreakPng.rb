@@ -12,7 +12,7 @@ module StreakPng
   ]
 
   class StreakChart
-    def initialize margin, width, height, border, levelcolors: DEFAULT_LEVEL_COLORS, streakdata: nil
+    def initialize margin: 6, width: 13, height: 13, border: 1, levelcolors: DEFAULT_LEVEL_COLORS, streakdata: nil
       @levelcolors = levelcolors
       if streakdata.nil?
         @streakdata = StreakData.new
@@ -29,29 +29,32 @@ module StreakPng
       @height = height
       @border = border
       @png = nil
-      @yr, @m, @d = -1, 0, 0
       self
     end
 
     def save filename
-      @png.save(filename, :interlace => true)
+      if @png
+        @png.save(filename, :interlace => true)
+      end
       self
     end
 
-    def generate yr: 0, m: 6, d: 0, maxdate: nil, start_on_monday: true, &block
+    def generate yr: 0, m: 6, d: 0, mindate: nil, maxdate: nil, start_on_monday: true, full_year_width: false, &block
       maxdate ||= Date.today
 
-      mindate = maxdate.prev_year(yr).prev_month(m).prev_day(d)
-      while start_on_monday && mindate.cwday != 1
-        mindate = mindate.next_day
+      if mindate.nil?
+        mindate = maxdate.prev_year(yr).prev_month(m).prev_day(d)
+        while start_on_monday && mindate.cwday != 1
+          mindate = mindate.next_day
+        end
       end
 
-      # we change the PNG's size only if we changed the interval
-      if yr != @y || m != @m || d != @d
-        @yr, @m, @d = yr, m, d
+      if full_year_width
+        weeks = 52
+      else
         weeks = ((maxdate - mindate).to_f / 7.0).ceil + ((maxdate.cwday < 7) ? 1 : 0)
-        @png = ChunkyPNG::Image.new((@width + @margin) * weeks + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
       end
+      @png = ChunkyPNG::Image.new((@width + @margin) * weeks + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
 
       x = @margin
 

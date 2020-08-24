@@ -31,6 +31,6 @@ else
 end
 
 StreakChart
-.new(6, 13, 13, 1, streakdata: data)
+.new(streakdata: data)
 .generate
 .save(ARGV[1])
