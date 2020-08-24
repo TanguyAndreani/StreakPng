@@ -4,25 +4,21 @@ require 'date'
 module StreakPng
   DEFAULT_LEVEL_COLORS = [
     # credit @byliuyang <https://github.com/byliuyang/github-stats>
-    { minCommits: 0, color: '#ebedf0' },
-    { minCommits: 1, color: '#c6e48b' },
-    { minCommits: 9, color: '#7bc96f' },
-    { minCommits: 17, color: '#239a3b' },
-    { minCommits: 26, color: '#196127' }
+    { treshold: 0, color: '#ebedf0' },
+    { treshold: 1, color: '#c6e48b' },
+    { treshold: 9, color: '#7bc96f' },
+    { treshold: 17, color: '#239a3b' },
+    { treshold: 26, color: '#196127' }
   ]
 
   class StreakChart
-    def initialize margin: 6, width: 13, height: 13, border: 1, levelcolors: DEFAULT_LEVEL_COLORS, streakdata: nil
-      @levelcolors = levelcolors
-      if streakdata.nil?
-        @streakdata = StreakData.new
-        @streakdata.add Date.today, "Today's task!"
+    def initialize margin: 6, width: 13, height: 13, border: 1, levelColors: DEFAULT_LEVEL_COLORS, streakData: nil
+      @levelColors = levelColors
+      if streakData.nil?
+        @streakData = streakData.new
+        @streakData.add Date.today, "Today's task!"
       else
-        if streakdata.class != StreakData
-          STDERR.puts "streakdata should be an instance of StreakData or nil!"
-          return
-        end
-        @streakdata = streakdata
+        @streakData = streakData
       end
       @margin = margin
       @width = width
@@ -39,30 +35,30 @@ module StreakPng
       self
     end
 
-    def generate yr: 0, m: 6, d: 0, mindate: nil, maxdate: nil, start_on_monday: true, full_year_width: false, &block
-      maxdate ||= Date.today
+    def draw yr: 0, m: 6, d: 0, minDate: nil, maxDate: nil, startOnMonday: true, fullYearWidth: false, &block
+      maxDate ||= Date.today
 
-      if mindate.nil?
-        mindate = maxdate.prev_year(yr).prev_month(m).prev_day(d)
-        while start_on_monday && mindate.cwday != 1
-          mindate = mindate.next_day
+      if minDate.nil?
+        minDate = maxDate.prev_year(yr).prev_month(m).prev_day(d)
+        while startOnMonday && minDate.cwday != 1
+          minDate = minDate.next_day
         end
       end
 
-      if full_year_width
+      if fullYearWidth
         weeks = 52
       else
-        weeks = ((maxdate - mindate).to_f / 7.0).ceil + ((maxdate.cwday < 7) ? 1 : 0)
+        weeks = ((maxDate - minDate).to_f / 7.0).ceil + ((maxDate.cwday < 7) ? 1 : 0)
       end
       @png = ChunkyPNG::Image.new((@width + @margin) * weeks + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
 
       x = @margin
 
-      mindate.upto(maxdate) { |date|
+      minDate.upto(maxDate) { |date|
         y = @margin*date.cwday + @height*(date.cwday-1)
 
-        draw_square x, y, @levelcolors.reduce({ minCommits: -1, color: '#000' }) { |acc, lvl|
-          if @streakdata.fetch_count(date, &block) >= lvl[:minCommits] && lvl[:minCommits] >= acc[:minCommits]
+        drawSquare x, y, @levelColors.reduce({ treshold: -1, color: '#000' }) { |acc, lvl|
+          if @streakData.fetch_count(date, &block) >= lvl[:treshold] && lvl[:treshold] >= acc[:treshold]
             lvl
           else
             acc
@@ -79,7 +75,7 @@ module StreakPng
 
     private
 
-    def draw_square(start_x, start_y, color)
+    def drawSquare(start_x, start_y, color)
       chunky_color = ChunkyPNG::Color.from_hex color
       start_x.upto(start_x+@width) { |x|
         start_y.upto(start_y+@height) { |y|
@@ -95,7 +91,7 @@ module StreakPng
 
   class StreakData
     def initialize
-      @bydate = Hash.new { Array.new }
+      @data = Hash.new { Array.new }
     end
 
     def add date, *tags
@@ -106,14 +102,14 @@ module StreakPng
         STDERR.puts "The date should be an instance of the Date class!"
         return
       end
-      @bydate[date.to_s] = @bydate[date.to_s] << tags
+      @data[date.to_s] = @data[date.to_s] << tags
     end
 
     def fetch_count date, &block
       if !block_given?
-        @bydate[date.to_s].length
+        @data[date.to_s].length
       else
-        @bydate[date.to_s].count &block
+        @data[date.to_s].count &block
       end
     end
   end
