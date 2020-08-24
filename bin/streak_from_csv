@@ -1,6 +1,13 @@
 #!/usr/bin/env ruby
 
 if ARGV.length != 2
+  print <<~EOF
+  USAGE
+  \t#{$PROGRAM_NAME} input.csv output.png
+  EXAMPLES
+  \t#{$PROGRAM_NAME} -- output.png\tread from standard input
+  EOF
+
   exit 1
 end
 
@@ -11,8 +18,16 @@ include StreakPng
 
 data = StreakData.new
 
-CSV.foreach(ARGV[0]) do |row|
+add_data = proc do |row|
   data.add Date.strptime(row[-1],"%Y.%m.%d"), *row[0..-2]
+end
+
+if ARGV[0] == '--'
+  CSV($stdin) { |csv_in|
+    csv_in.each &add_data
+  }
+else
+  CSV.foreach ARGV[0], &add_data
 end
 
 StreakChart

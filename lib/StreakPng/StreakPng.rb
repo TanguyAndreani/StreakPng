@@ -49,7 +49,7 @@ module StreakPng
       # we change the PNG's size only if we changed the interval
       if y != @y || m != @m || d != @d
         @y, @m, @d = 1, 0, 0
-        weeks = ((maxdate - mindate).to_f / 7.0).ceil
+        weeks = ((maxdate - mindate).to_f / 7.0).ceil + ((maxdate.cwday < 7) ? 1 : 0)
         @png = ChunkyPNG::Image.new((@width + @margin) * weeks + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
       end
 
