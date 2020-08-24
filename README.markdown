@@ -51,7 +51,7 @@ You can change the default interval, which is of a year, using three arguments. 
 ```ruby
 StreakChart
 .new(...)
-.generate(y: 0, m: 3)
+.generate(yr: 0, m: 3)
 .save(...)
 ```
 

@@ -29,7 +29,7 @@ module StreakPng
       @height = height
       @border = border
       @png = nil
-      @y, @m, @d = -1, 0, 0
+      @yr, @m, @d = -1, 0, 0
       self
     end
 
@@ -38,24 +38,26 @@ module StreakPng
       self
     end
 
-    def generate y: 0, m: 6, d: 0, maxdate: nil, &block
+    def generate yr: 0, m: 6, d: 0, maxdate: nil, start_on_monday: true, &block
       maxdate ||= Date.today
 
-      mindate = maxdate.prev_year(y).prev_month(m).prev_day(d)
-      while mindate.cwday != 1
+      mindate = maxdate.prev_year(yr).prev_month(m).prev_day(d)
+      while start_on_monday && mindate.cwday != 1
         mindate = mindate.next_day
       end
 
       # we change the PNG's size only if we changed the interval
-      if y != @y || m != @m || d != @d
-        @y, @m, @d = 1, 0, 0
+      if yr != @y || m != @m || d != @d
+        @yr, @m, @d = yr, m, d
         weeks = ((maxdate - mindate).to_f / 7.0).ceil + ((maxdate.cwday < 7) ? 1 : 0)
         @png = ChunkyPNG::Image.new((@width + @margin) * weeks + @margin, (@height + @margin) * 7 + @margin, ChunkyPNG::Color::TRANSPARENT)
       end
 
-      x, y = @margin, @margin
+      x = @margin
 
       mindate.upto(maxdate) { |date|
+        y = @margin*date.cwday + @height*(date.cwday-1)
+
         draw_square x, y, @levelcolors.reduce({ minCommits: -1, color: '#000' }) { |acc, lvl|
           if @streakdata.fetch_count(date, &block) >= lvl[:minCommits] && lvl[:minCommits] >= acc[:minCommits]
             lvl
@@ -64,10 +66,7 @@ module StreakPng
           end
         }[:color]
 
-        y += @margin + @height
-
         if date.cwday == 7
-          y = @margin
           x += @margin + @width
         end
       }
