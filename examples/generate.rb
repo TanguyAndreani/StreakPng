@@ -30,35 +30,45 @@ end
 CSV.new(text).each &add_data
 #-->
 
+### Basic example
+
+#![](example1.png)
+
 #```ruby
 StreakChart
 .new(streakdata: data)
-.generate
+.draw
 .save('examples/example1.png')
 #```
 
-#![](example1.png)
+### Changing sizes and date interval
+
+#![](example2.png)
 
 #```ruby
 StreakChart
 ## 8x8 squares with 2px borders
 .new(streakdata: data, width: 8, height: 8, border: 2, margin: 3)
 ## 1 month up to now
-.generate(yr: 0, m: 1)
+.draw(yr: 0, m: 1)
 .save('examples/example2.png')
 #```
 
-#![](example2.png)
+### Overriding dates
+
+#![](example3.png)
 
 #```ruby
 StreakChart
 .new(streakdata: data)
 ## force full year
-.generate(mindate: Date.new(2020, 1, 1), maxdate: Date.new(2020, 12, 31))
+.draw(mindate: Date.new(2020, 1, 1), maxdate: Date.new(2020, 12, 31))
 .save('examples/example3.png')
 #```
 
-#![](example3.png)
+### Changing colors
+
+#![](example4.png)
 
 #```ruby
 StreakChart
@@ -70,11 +80,34 @@ StreakChart
   { minCommits: 17, color: '#be93fd' },
   { minCommits: 26, color: '#a178df' }
 ])
-.generate
+.draw
 .save('examples/example4.png')
 #```
 
-#![](example4.png)
+### Filtering entries
+
+#![](example5.png)
+
+#```ruby
+StreakChart
+.new(streakdata: data)
+.draw { |tags|
+  # p tags
+  tags.include? 'art'
+}
+.save('examples/example5.png')
+#```
+
+### Always 52-weeks wide
+
+#![](example6.png)
+
+#```ruby
+StreakChart
+.new(streakdata: data)
+.draw(full_year_width: true)
+.save('examples/example6.png')
+#```
 
 #<!--
 File.open('examples/examples.markdown', 'w') do |aFile|
