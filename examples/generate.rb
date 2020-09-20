@@ -6,6 +6,12 @@ require 'csv'
 require 'StreakPng'
 include StreakPng
 
+class StreakCommon
+  def today
+    Date.new(2020, 8, 24)
+  end
+end
+
 text = <<~EOF
 sport,20 pushups,2020.08.12
 sport,20 min running,2020.08.12
