@@ -1,7 +1,7 @@
 require 'chunky_png'
 
 module StreakPng
-  class StreakChart < StreakCommon
+  class StreakChart
     DEFAULT_LEVEL_COLORS = [
       # credit @byliuyang <https://github.com/byliuyang/github-stats>
       { treshold: 0, color: '#ebedf0' },
@@ -10,6 +10,10 @@ module StreakPng
       { treshold: 17, color: '#239a3b' },
       { treshold: 26, color: '#196127' }
     ]
+
+    def self.dateClass
+      @dateClass || Date
+    end
 
     def initialize **args
       @png = nil
@@ -78,11 +82,11 @@ module StreakPng
         m: 6,
         d: 0,
         minDate: nil,
-        maxDate: today,
+        maxDate: StreakChart.dateClass.today,
         startOnMonday: true,
         fullYearWidth: false,
         streakData: StreakData.new.tap { |d|
-          d.add today, "Sample task"
+          d.add StreakChart.dateClass.today, "Sample task"
         }
       }
     end

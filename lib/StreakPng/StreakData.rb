@@ -1,7 +1,7 @@
 require 'date'
 
 module StreakPng
-  class StreakData < StreakCommon
+  class StreakData
     def initialize
       @data = Hash.new { Array.new }
     end

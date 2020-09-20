@@ -6,11 +6,13 @@ require 'csv'
 require 'StreakPng'
 include StreakPng
 
-class StreakCommon
-  def today
-    Date.new(2020, 8, 24)
+StreakChart.instance_eval {
+  @dateClass = Class.new do
+    def self.today
+      Date.new 2020, 8, 24
+    end
   end
-end
+}
 
 text = <<~EOF
 sport,20 pushups,2020.08.12

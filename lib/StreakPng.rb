@@ -1,4 +1,3 @@
-require_relative './StreakPng/StreakCommon'
 require_relative './StreakPng/StreakData'
 require_relative './StreakPng/StreakChart'
 
