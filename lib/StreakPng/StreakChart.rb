@@ -32,7 +32,9 @@ module StreakPng
     end
 
     def draw **args, &block
-      @conf.merge(args) { |key, _, _| @conf[key] = args[key] if args[key] }
+      @conf.merge(args) { |key, _, _|
+        @conf[key] = args[key] if args[key]
+      }
 
       if @conf[:minDate].nil?
         @conf[:minDate] = @conf[:maxDate].prev_year(@conf[:yr]).prev_month(@conf[:m]).prev_day(@conf[:d])

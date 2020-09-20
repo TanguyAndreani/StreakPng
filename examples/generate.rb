@@ -7,9 +7,9 @@ require 'StreakPng'
 include StreakPng
 
 StreakChart.instance_eval {
-  @dateClass = Class.new do
+  @dateClass = Class.new(Date) do
     def self.today
-      Date.new 2020, 8, 24
+      new 2020, 8, 24
     end
   end
 }
