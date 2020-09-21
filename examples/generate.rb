@@ -116,7 +116,7 @@ StreakChart
 .save('examples/example6.png')
 #```
 
-### Custom Image class
+### Custom formats (ex: SVG)
 
 #![](example7.svg)
 
@@ -126,6 +126,9 @@ StreakChart
 .draw
 .save('examples/example7.svg')
 #```
+
+#You can take a look at [VictorBackend.rb](/lib/StreakPng/VictorBackend.rb) for reference.
+#Your custom format is basically a class which responds to those three methods.
 
 #<!--
 File.open('examples/examples.markdown', 'w') do |aFile|
