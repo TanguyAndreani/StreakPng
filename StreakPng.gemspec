@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/TanguyAndreani/StreakPng'
   s.license       = 'MIT'
   s.add_dependency "chunky_png", "~> 1.3"
+  s.add_dependency "victor", "~> 0.3.2"
 end

@@ -116,6 +116,36 @@ StreakChart
 .save('examples/example6.png')
 ```
 
+## Custom Image class
+
+![](example7.svg)
+
+```ruby
+require 'victor'
+
+class MySVG < Victor::SVG
+  def initialize width, height
+    super width: width, height: height, style: {}
+  end
+
+  def drawSquare start_x, start_y, width, height, border, hex_color
+    rect x: start_x, y: start_y, width: width, height: height, fill: hex_color
+  end
+
+  def save filename
+    $stderr.puts "Saving to #{filename}"
+    super filename
+  end
+end
+
+StreakChart
+.new(streakData: data, imageClass: MySVG)
+.draw(fullYearWidth: true)
+.save('examples/example7.svg')
+```
+
+*Your class just needs to respond to those three methods.*
+
 <!--
 File.open('examples/examples.markdown', 'w') do |aFile|
   aFile.puts File.read(__FILE__).gsub(/^#/, '')

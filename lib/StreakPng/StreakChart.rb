@@ -1,5 +1,3 @@
-require 'chunky_png'
-
 module StreakPng
   class StreakChart
     DEFAULT_LEVEL_COLORS = [
@@ -16,7 +14,8 @@ module StreakPng
     end
 
     def initialize **args
-      @png = nil
+      @imageClass = args[:imageClass] || ::StreakPng::ChunkyPNGBackend
+      @streakData = args[:streakData] || (StreakData.new.tap {|d| d.add StreakChart.dateClass.today, "Sample task"})
 
       @conf = args
       defaultConf.each_key { |key|
@@ -26,26 +25,21 @@ module StreakPng
       self
     end
 
-    def save filename
-      @png.save(filename, :interlace => true) if @png
-      self
-    end
-
     def draw **args, &block
       @conf.merge(args) { |key, _, _|
         @conf[key] = args[key] if args[key]
       }
 
-      computeMinDate
+      computeDateInterval
 
-      @png = createImage(
+      image = @imageClass.new(
         (@conf[:width] + @conf[:margin]) * weeks() + @conf[:margin],
         (@conf[:height] + @conf[:margin]) * 7 + @conf[:margin]
       )
 
-      drawChart block
+      drawChart image, block
 
-      self
+      image
     end
 
     private
@@ -58,7 +52,8 @@ module StreakPng
       end
     end
 
-    def computeMinDate
+    def computeDateInterval
+      @conf[:maxDate] ||= StreakChart.dateClass.today
       if @conf[:minDate].nil?
         @conf[:minDate] = @conf[:maxDate].prev_year(@conf[:yr]).prev_month(@conf[:m]).prev_day(@conf[:d])
         while @conf[:startOnMonday] && @conf[:minDate].cwday != 1
@@ -78,22 +73,19 @@ module StreakPng
         m: 6,
         d: 0,
         minDate: nil,
-        maxDate: StreakChart.dateClass.today,
+        maxDate: nil,
         startOnMonday: true,
         fullYearWidth: false,
-        streakData: StreakData.new.tap { |d|
-          d.add StreakChart.dateClass.today, "Sample task"
-        }
       }
     end
 
-    def drawChart block
+    def drawChart image, block
       x = @conf[:margin]
 
       @conf[:minDate].upto(@conf[:maxDate]) { |date|
         y = @conf[:margin]*date.cwday + @conf[:height]*(date.cwday-1)
 
-        drawSquare @png, x, y, @conf[:width], @conf[:height], @conf[:border], @conf[:levelColors].reduce({ treshold: -1, color: '#000' }) { |acc, lvl|
+        color = @conf[:levelColors].reduce({ treshold: -1, color: '#000' }) { |acc, lvl|
           if @conf[:streakData].fetch_count(date, &block) >= lvl[:treshold] && lvl[:treshold] >= acc[:treshold]
             lvl
           else
@@ -101,26 +93,11 @@ module StreakPng
           end
         }[:color]
 
+        image.drawSquare x, y, @conf[:width], @conf[:height], @conf[:border], color
+
         if date.cwday == 7
           x += @conf[:margin] + @conf[:width]
         end
-      }
-    end
-
-    def createImage width, height
-      ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
-    end
-
-    def drawSquare(png, start_x, start_y, width, height, border, color)
-      chunky_color = ChunkyPNG::Color.from_hex color
-      start_x.upto(start_x+width) { |x|
-        start_y.upto(start_y+height) { |y|
-          if x - start_x < border || x - start_x > width - border || y - start_y < border || y - start_y > height - border
-            png[x,y] = chunky_color
-          else
-            png[x,y] = ChunkyPNG::Color.fade(chunky_color, 200)
-          end
-        }
       }
     end
   end
