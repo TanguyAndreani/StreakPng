@@ -10,7 +10,7 @@ module StreakPng
 
     def drawSquare start_x, start_y, width, height, border, hex_color
       @fadedColor ||= Hash.new
-      @fadedColor[hex_color] ||= fade_hex hex_color, -0.2
+      @fadedColor[hex_color] ||= fade_hex hex_color, -0.1
 
       rect(
         x: start_x,
