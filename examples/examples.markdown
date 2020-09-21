@@ -55,9 +55,9 @@ StreakChart
 ```ruby
 StreakChart
 # 8x8 squares with 2px borders
-.new(streakData: data, width: 8, height: 8, border: 2, margin: 3)
+.new(streakData: data)
 # 1 month up to now
-.draw(yr: 0, m: 1)
+.draw(conf: {width: 8, height: 8, border: 2, margin: 3, yr: 0, m: 1})
 .save('examples/example2.png')
 ```
 
@@ -69,7 +69,7 @@ StreakChart
 StreakChart
 .new(streakData: data)
 # force full year
-.draw(minDate: Date.new(2020, 1, 1), maxDate: Date.new(2020, 12, 31))
+.draw(conf: {minDate: Date.new(2020, 1, 1), maxDate: Date.new(2020, 12, 31)})
 .save('examples/example3.png')
 ```
 
@@ -80,14 +80,16 @@ StreakChart
 ```ruby
 StreakChart
 # custom colors
-.new(streakData: data, levelColors: [
-  { treshold: 0, color: '#ebedf0' },
-  { treshold: 1, color: '#faccff' },
-  { treshold: 9, color: '#dcb0ff' },
-  { treshold: 17, color: '#be93fd' },
-  { treshold: 26, color: '#a178df' }
-])
-.draw
+.new(streakData: data)
+.draw(conf: {
+  levelColors: [
+    { treshold: 0, color: '#ebedf0' },
+    { treshold: 1, color: '#faccff' },
+    { treshold: 9, color: '#dcb0ff' },
+    { treshold: 17, color: '#be93fd' },
+    { treshold: 26, color: '#a178df' }
+  ]
+})
 .save('examples/example4.png')
 ```
 
@@ -112,7 +114,7 @@ StreakChart
 ```ruby
 StreakChart
 .new(streakData: data)
-.draw(fullYearWidth: true)
+.draw(conf: {fullYearWidth: true})
 .save('examples/example6.png')
 ```
 
@@ -122,7 +124,7 @@ StreakChart
 
 ```ruby
 StreakChart
-.new(streakData: data, imageClass: VictorBackend)
+.new(streakData: data, backend: VictorBackend)
 .draw
 .save('examples/example7.svg')
 ```

@@ -15,11 +15,11 @@ module StreakPng
 
     # TODO: def initialize backend: ChunkyPNGBackend, streakData: ..., conf: {}
 
-    def initialize **args
-      @imageClass = args[:imageClass] || ::StreakPng::ChunkyPNGBackend
-      @streakData = args[:streakData] || (StreakData.new.tap {|d| d.add StreakChart.dateClass.today, "Sample task"})
+    def initialize backend: ChunkyPNGBackend, streakData: nil, conf: nil
+      @backend = backend
+      @streakData = streakData
 
-      @conf = args
+      @conf = conf || {}
       defaultConf.each_key { |key|
         @conf[key] ||= defaultConf[key]
       }
@@ -27,16 +27,18 @@ module StreakPng
       self
     end
 
-    def draw **args, &block
-      @imageClass ||= args[:imageClass]
+    def draw backend: nil, conf: nil, &block
+      @backend = backend || @backend
 
-      @conf.merge(args) { |key, _, _|
-        @conf[key] = args[key] if key != :imageClass && args[key]
-      }
+      if conf
+        @conf.merge(conf) { |key, _, _|
+          @conf[key] = conf[key] if conf[key]
+        }
+      end
 
       computeDateInterval
 
-      image = @imageClass.new(
+      image = @backend.new(
         (@conf[:width] + @conf[:margin]) * weeks() + @conf[:margin],
         (@conf[:height] + @conf[:margin]) * 7 + @conf[:margin]
       )
@@ -90,7 +92,7 @@ module StreakPng
         y = @conf[:margin]*date.cwday + @conf[:height]*(date.cwday-1)
 
         color = @conf[:levelColors].reduce({ treshold: -1, color: '#000' }) { |acc, lvl|
-          if @conf[:streakData].fetch_count(date, &block) >= lvl[:treshold] && lvl[:treshold] >= acc[:treshold]
+          if @streakData.fetch_count(date, &block) >= lvl[:treshold] && lvl[:treshold] >= acc[:treshold]
             lvl
           else
             acc
