@@ -2,6 +2,8 @@
 
 ![](examples/example1.png)
 
+It's not stable yet!
+
 ## As a RubyGem
 
 ```ruby
