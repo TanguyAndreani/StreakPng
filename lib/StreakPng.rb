@@ -1,3 +1,4 @@
+require_relative './StreakPng/ColorHelper'
 require_relative './StreakPng/ChunkyPNGBackend'
 require_relative './StreakPng/VictorBackend'
 require_relative './StreakPng/StreakData'

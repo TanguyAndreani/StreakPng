@@ -13,6 +13,8 @@ module StreakPng
       @dateClass || Date
     end
 
+    # TODO: def initialize backend: ChunkyPNGBackend, streakData: ..., conf: {}
+
     def initialize **args
       @imageClass = args[:imageClass] || ::StreakPng::ChunkyPNGBackend
       @streakData = args[:streakData] || (StreakData.new.tap {|d| d.add StreakChart.dateClass.today, "Sample task"})
