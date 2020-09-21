@@ -26,8 +26,10 @@ module StreakPng
     end
 
     def draw **args, &block
+      @imageClass ||= args[:imageClass]
+
       @conf.merge(args) { |key, _, _|
-        @conf[key] = args[key] if args[key]
+        @conf[key] = args[key] if key != :imageClass && args[key]
       }
 
       computeDateInterval
