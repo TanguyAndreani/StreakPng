@@ -13,12 +13,11 @@ module StreakPng
       @dateClass || Date
     end
 
-    # TODO: def initialize backend: ChunkyPNGBackend, streakData: ..., conf: {}
-
     def initialize backend: ChunkyPNGBackend, streakData: nil, conf: nil
       @backend = backend
       @streakData = streakData
 
+      # pull from defaultConf if the value wasn't provided
       @conf = conf || {}
       defaultConf.each_key { |key|
         @conf[key] ||= defaultConf[key]
@@ -31,6 +30,7 @@ module StreakPng
       @backend = backend || @backend
 
       if conf
+        # If a value was provided replace the old with conf[key]
         @conf.merge(conf) { |key, _, _|
           @conf[key] = conf[key] if conf[key]
         }
