@@ -91,15 +91,15 @@ module StreakPng
       @conf[:minDate].upto(@conf[:maxDate]) { |date|
         y = @conf[:margin]*date.cwday + @conf[:height]*(date.cwday-1)
 
-        color = @conf[:levelColors].reduce({ treshold: -1, color: '#000' }) { |acc, lvl|
+        level = @conf[:levelColors].reduce({ treshold: -1, color: '#000' }) { |acc, lvl|
           if @streakData.fetch_count(date, &block) >= lvl[:treshold] && lvl[:treshold] >= acc[:treshold]
             lvl
           else
             acc
           end
-        }[:color]
+        }
 
-        image.drawSquare x, y, @conf[:width], @conf[:height], @conf[:border], color
+        image.drawSquare x, y, @conf[:width], @conf[:height], @conf[:border], level[:color]
 
         if date.cwday == 7
           x += @conf[:margin] + @conf[:width]
